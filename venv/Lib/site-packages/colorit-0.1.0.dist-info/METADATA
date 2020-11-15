@@ -1,0 +1,39 @@
+Metadata-Version: 2.0
+Name: colorit
+Version: 0.1.0
+Summary: A RGB format coloring for terminal
+Home-page: https://gihub.com/arjunsinghy96/colorit
+Author: Arjun Singh Yadav
+Author-email: 14bcs010@smvdu.ac.in
+License: MIT
+Keywords: color terminal RGB
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.2
+Classifier: Programming Language :: Python :: 3.3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+
+=======
+colorit
+=======
+Use to color your applications output.
+
+It uses RGB format coloring so you get to create your own color.
+
+Included
+--------
+- color_front : colors the foreground
+- color_back : colors the background
+- bold : set bold
+- under : set underline
+- strike : set crossed-out
+
+:Author:
+    Arjun Singh Yadav
+
+
