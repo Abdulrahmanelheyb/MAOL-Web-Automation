@@ -5,20 +5,23 @@ from selenium.common.exceptions import NoSuchElementException
 import time
 from colorit import *
 import xlsxwriter
+
+
 # from selenium.webdriver.common.keys import Keys
 # from selenium.webdriver.support.ui import WebDriverWait
 # from selenium.webdriver.support.expected_conditions import presence_of_element_located
 
 
-
 class Student:
-    _ID = None
-    _firstName = None
-    _lastName = None
-    _studentNo = None
-    _tcNO = None
-    _degrees = dict()
     Students = []
+
+    def __init__(self):
+        self._ID = None
+        self._firstName = None
+        self._lastName = None
+        self._studentNo = None
+        self._tcNO = None
+        self._degrees = dict()
 
     def setID(self, Id):
         self._ID = Id
@@ -50,6 +53,12 @@ class Student:
     def getTcNo(self):
         return self._tcNO
 
+    def setDegrees(self, degrees):
+        self._degrees = degrees
+
+    def getDegrees(self):
+        return dict(self._degrees)
+
     def getAllInfo(self):
         return [self._studentNo, self._tcNO, self._firstName, self._lastName]
 
@@ -75,7 +84,7 @@ class Student:
     @staticmethod
     def loadStudents(workBookPath):
         workBook = xlrd.open_workbook(workBookPath)
-        workSheet = workBook.sheet_by_index(2)
+        workSheet = workBook.sheet_by_index(0)
         ndx = 0
         for i in range(3, workSheet.nrows):
             std = Student()
@@ -88,25 +97,62 @@ class Student:
             ndx = ndx + 1
 
 
-def insertStudents(workBookPath,std: Student):
-    readWBook = xlrd.open_workbook(workBookPath)
-    readWSheet = readWBook.get_sheet(0)
-    nrow = readWSheet.nrows
-    ncol = readWSheet.ncols
+def insertStudents(workBookPath):
+    workbook = xlsxwriter.Workbook(workBookPath)
+    sheet = workbook.add_worksheet("IT")
 
+    for std in range(len(Student.Students)):
+        sheet.write(std, 0, Student.Students[std].getFirstName())
+        sheet.write(std, 1, Student.Students[std].getFirstName())
+        sheet.write(std, 2, Student.Students[std].getFirstName())
+        sheet.write(std, 3, "BİLİŞİM TEKNOLOJİLERİ ALANI")
+        sheet.write(std, 4, "")
+        degrees = Student.Students[std].getDegrees()
+        for i in range(len(degrees[0])):
 
-    workBook = xlsxwriter.Workbook(workBookPath)
-    workSheet = workBook.get_worksheet_by_name("IT")
-    workSheet.write_row()
+            lessonID = degrees[0][i]
+            sheet.write(i, 0, degrees[1][i])
+            # BT003 / MESLEKİ GELİŞİM 1
+            if lessonID == "BT003":
+                sheet.write(i, 5, degrees[0][i])
+
+            # BT004 / MESLEKİ GELİŞİM 2
+            elif lessonID == "BT004":
+                sheet.write(i, 6, degrees[0][i])
+
+            # BT049 / PROGRAMLAMA TEMELLERİ 1
+            elif lessonID == "BT049":
+                sheet.write(i, 7, degrees[0][i])
+
+            # BT079 / PROGRAMLAMA TEMELLERİ 1 (*)
+            elif lessonID == "BT079":
+                sheet.write(i, 8, degrees[0][i])
+
+            # BT081 / BİLİŞİM TEKNOLOJİLERİNİN TEMELLERİ 1
+            elif lessonID == "BT081":
+                sheet.write(i, 9, degrees[0][i])
+
+            # BT079 / PROGRAMLAMA TEMELLERİ 1 (*)
+            elif lessonID == "BT049":
+                sheet.write(i, 10, degrees[0][i])
+
+            # BT079 / PROGRAMLAMA TEMELLERİ 1 (*)
+            elif lessonID == "BT049":
+                sheet.write(i, 11, degrees[0][i])
+
+            # BT079 / PROGRAMLAMA TEMELLERİ 1 (*)
+            elif lessonID == "BT049":
+                sheet.write(i, 12, degrees[0][i])
+
+    workbook.close()
 
 
 def GetStudentDegrees(bwr: webdriver, student: Student):
-    Degrees = []
+    Degrees = [[], [], [], [], [], [], [], [], [], []]
     try:
         # this condition for no refresh page in first student scraping
         if student.getID() != 0:
             bwr.get("http://aolweb.aol.meb.gov.tr/AOL01001.aspx#!")
-
         tcno = bwr.find_element(By.ID, "txtTCNo")
         tcno.send_keys(student.getTcNo())
 
@@ -120,21 +166,31 @@ def GetStudentDegrees(bwr: webdriver, student: Student):
         degrees.click()
 
         time.sleep(2)
+
+        # //*[@id="lblKayitTarihi"] this for get student register date .
+
         bwr.switch_to.frame("webFrame")
 
         degreesTable = bwr.find_element(By.XPATH, "//*[@id='grdYuzYuze']")
         rowCount = len(bwr.find_elements(By.XPATH, "//*[@id='grdYuzYuze']/tbody/tr")) + 1
-        cellCount = len(bwr.find_elements(By.XPATH, "//*[@id='grdYuzYuze']/tbody/tr[2]/td")) + 1
         for rowNdx in range(2, rowCount):
             row = degreesTable.find_element(By.XPATH, "//*[@id='grdYuzYuze']/tbody/tr[" + str(rowNdx) + "]")
-            for cellNdx in range(1, cellCount):
-                cell = row.find_element(By.XPATH, "//*[@id='grdYuzYuze']/tbody/tr[" + str(rowNdx) + "]/td[" + str(cellNdx) + "]")
+
+            def getCell(cellIndex):
+                cell = row.find_element(By.XPATH,
+                                        "//*[@id='grdYuzYuze']/tbody/tr[" + str(rowNdx) + "]/td[" + str(
+                                            cellIndex) + "]")
                 value = str.strip(cell.text)
                 if bool(value):
-                    Degrees.append(cell.text)
+                    Degrees[cellIndex - 1].append(cell.text)
                     print(color_front(cell.text, 124, 252, 0))
                 else:
+                    Degrees[cellIndex - 1].append("-")
                     print(color_front("---", 220, 20, 60))
+
+            for i in range(1, 11):
+                getCell(i)
+
             print(color_front(">>>>>>>>> BREAK", 30, 144, 255))
         print(color_front("==============================", 255, 102, 255))
     except NoSuchElementException:
@@ -142,4 +198,5 @@ def GetStudentDegrees(bwr: webdriver, student: Student):
         print("STUDENT TCNO : %d" % (student.getTcNo()))
         print("STUDENT NAME : %s \n STUDENT SURNAME : %s" % (student.getFirstName(), student.getLastName()))
         print(color_front("==============================", 255, 102, 255))
+    student.setDegrees(Degrees)
     time.sleep(3)
