@@ -5,6 +5,8 @@ from selenium.common.exceptions import NoSuchElementException
 import time
 from colorit import *
 import xlsxwriter
+import os
+from os import path
 
 
 # from selenium.webdriver.common.keys import Keys
@@ -57,7 +59,7 @@ class Student:
         self._degrees = degrees
 
     def getDegrees(self):
-        return dict(self._degrees)
+        return self._degrees
 
     def getAllInfo(self):
         return [self._studentNo, self._tcNO, self._firstName, self._lastName]
@@ -86,7 +88,7 @@ class Student:
         workBook = xlrd.open_workbook(workBookPath)
         workSheet = workBook.sheet_by_index(0)
         ndx = 0
-        for i in range(3, workSheet.nrows):
+        for i in range(workSheet.nrows):
             std = Student()
             std.setID(ndx)
             std.setStudentNo(int(workSheet.cell_value(i, 0)))
@@ -101,50 +103,44 @@ def insertStudents(workBookPath):
     workbook = xlsxwriter.Workbook(workBookPath)
     sheet = workbook.add_worksheet("IT")
 
-    for std in range(len(Student.Students)):
-        sheet.write(std, 0, Student.Students[std].getFirstName())
-        sheet.write(std, 1, Student.Students[std].getFirstName())
-        sheet.write(std, 2, Student.Students[std].getFirstName())
-        sheet.write(std, 3, "BİLİŞİM TEKNOLOJİLERİ ALANI")
-        sheet.write(std, 4, "")
-        degrees = Student.Students[std].getDegrees()
+    for stdNdx in range(len(Student.Students)):
+        student = Student.Students[stdNdx]
+        sheet.set_column(0, 1, 12)
+        sheet.write(stdNdx, 0, Student.Students[stdNdx].getStudentNo())
+        sheet.write(stdNdx, 1, Student.Students[stdNdx].getTcNo())
+        sheet.write(stdNdx, 2, Student.Students[stdNdx].getFirstName())
+        sheet.write(stdNdx, 3, Student.Students[stdNdx].getLastName())
+        sheet.write(stdNdx, 4, "BİLİŞİM TEKNOLOJİLERİ ALANI")
+        sheet.write(stdNdx, 5, "")
+        degrees = student.getDegrees()
         for i in range(len(degrees[0])):
 
             lessonID = degrees[0][i]
-            sheet.write(i, 0, degrees[1][i])
-            # BT003 / MESLEKİ GELİŞİM 1
-            if lessonID == "BT003":
-                sheet.write(i, 5, degrees[0][i])
-
-            # BT004 / MESLEKİ GELİŞİM 2
-            elif lessonID == "BT004":
-                sheet.write(i, 6, degrees[0][i])
+            # BT077 / MESLEKİ GELİŞİM ATÖLYESİ 1
+            if lessonID == "BT077":
+                sheet.write(i, 8, degrees[4][i])
 
             # BT049 / PROGRAMLAMA TEMELLERİ 1
             elif lessonID == "BT049":
-                sheet.write(i, 7, degrees[0][i])
+                sheet.write(i, 8, degrees[4][i])
 
             # BT079 / PROGRAMLAMA TEMELLERİ 1 (*)
             elif lessonID == "BT079":
-                sheet.write(i, 8, degrees[0][i])
+                sheet.write(i, 9, degrees[4][i])
+
+            # BT079 / PROGRAMLAMA TEMELLERİ 1 (*)
+            elif lessonID == "BT049":
+                sheet.write(i, 11, degrees[4][i])
 
             # BT081 / BİLİŞİM TEKNOLOJİLERİNİN TEMELLERİ 1
             elif lessonID == "BT081":
-                sheet.write(i, 9, degrees[0][i])
+                sheet.write(i, 10, degrees[4][i])
 
-            # BT079 / PROGRAMLAMA TEMELLERİ 1 (*)
-            elif lessonID == "BT049":
-                sheet.write(i, 10, degrees[0][i])
-
-            # BT079 / PROGRAMLAMA TEMELLERİ 1 (*)
-            elif lessonID == "BT049":
-                sheet.write(i, 11, degrees[0][i])
-
-            # BT079 / PROGRAMLAMA TEMELLERİ 1 (*)
-            elif lessonID == "BT049":
-                sheet.write(i, 12, degrees[0][i])
-
-    workbook.close()
+    if path.exists(workBookPath):
+        os.remove(workBookPath)
+        workbook.close()
+    else:
+        workbook.close()
 
 
 def GetStudentDegrees(bwr: webdriver, student: Student):
