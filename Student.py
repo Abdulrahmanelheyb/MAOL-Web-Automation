@@ -23,6 +23,7 @@ class Student:
         self._lastName = None
         self._studentNo = None
         self._tcNO = None
+        self._register_date = None
         self._degrees = dict()
 
     def setID(self, Id):
@@ -61,8 +62,11 @@ class Student:
     def getDegrees(self):
         return self._degrees
 
-    def getAllInfo(self):
-        return [self._studentNo, self._tcNO, self._firstName, self._lastName]
+    def setRegisterDate(self, register_date):
+        self._register_date = register_date
+
+    def getRegisterDate(self):
+        return self._register_date
 
     def getStudents(self):
         return self.Students
@@ -108,10 +112,12 @@ def insertStudents(workBookPath):
         sheet.set_column(0, 1, 12)
         sheet.write(stdNdx, 0, Student.Students[stdNdx].getStudentNo())
         sheet.write(stdNdx, 1, Student.Students[stdNdx].getTcNo())
+        sheet.set_column(2, 2, 15)
         sheet.write(stdNdx, 2, Student.Students[stdNdx].getFirstName())
         sheet.write(stdNdx, 3, Student.Students[stdNdx].getLastName())
+        sheet.set_column(4, 4, 25)
         sheet.write(stdNdx, 4, "BİLİŞİM TEKNOLOJİLERİ ALANI")
-        sheet.write(stdNdx, 5, "")
+        sheet.write(stdNdx, 5, Student.Students[stdNdx].getRegisterDate())
         degrees = student.getDegrees()
         for i in range(len(degrees[0])):
 
@@ -158,12 +164,16 @@ def GetStudentDegrees(bwr: webdriver, student: Student):
         selectStd = bwr.find_element(By.XPATH, "//*[@id='grdAramaSonuclar']/tbody/tr[2]/td[1]/a/img")
         selectStd.click()
 
-        degrees = bwr.find_element(By.XPATH, "//*[@id='cssmenu']/ul/li[2]/ul/li[3]/a")
-        degrees.click()
+        goto_register_date_menu = bwr.find_element(By.XPATH, "//*[@id='cssmenu']/ul/li[2]/ul/li[9]/a")
+        goto_register_date_menu.click()
+
+        register_date = bwr.find_element(By.XPATH, "//*[@id='lblKayitTarihi']")
+        student.setRegisterDate(register_date.text)
+
+        degreesMenu = bwr.find_element(By.XPATH, "//*[@id='cssmenu']/ul/li[2]/ul/li[3]/a")
+        degreesMenu.click()
 
         time.sleep(2)
-
-        # //*[@id="lblKayitTarihi"] this for get student register date .
 
         bwr.switch_to.frame("webFrame")
 
