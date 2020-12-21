@@ -5,6 +5,6 @@ from models.web_io import *
 
 
 def e_execute(excelFilePath):
-    EStudent.Students = read_excel(excelFilePath, 1)
+    EStudent.setStudents(read_excel(excelFilePath, 1))
     read_web(EStudent.Students)
     write_excel(2, "elektrik elektronik")

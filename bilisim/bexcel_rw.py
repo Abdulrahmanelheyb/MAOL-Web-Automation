@@ -8,8 +8,6 @@ def write_header(sheet: xlsxwriter.workbook.Worksheet):
     frmtRotate = getWorkBook().add_format()
     frmtRotate.set_rotation(90)
 
-    frmtBold = getWorkBook().add_format({'bold': True})
-
     frmt_Bold_Center = getWorkBook().add_format()
     frmt_Bold_Center.set_bold(True)
     frmt_Bold_Center.set_align('center')
@@ -36,7 +34,7 @@ def write_header(sheet: xlsxwriter.workbook.Worksheet):
         sheet.write(2, rowndx, lesson["Credit"], frmt_Bold_Center)
     sheet.set_column(22, 22, 3.8)
     sheet.write(1, 22, "Toplam", frmtAlign_Rotate_Bold)
-    sheet.write(2, 22, BStudent.getTotalLessonsCredits(), frmtBold)
+    sheet.write(2, 22, BStudent.getTotalLessonsCredits(), frmt_Bold_Center)
 
 
 def write_excel(crow: int, sheetname: str):

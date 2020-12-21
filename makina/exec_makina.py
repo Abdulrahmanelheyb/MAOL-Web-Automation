@@ -5,6 +5,6 @@ from models.web_io import *
 
 
 def m_execute(excelFilePath):
-    MStudent.Students = read_excel(excelFilePath)
+    MStudent.setStudents(read_excel(excelFilePath, 2))
     read_web(MStudent.Students)
     write_excel(2, "makina")

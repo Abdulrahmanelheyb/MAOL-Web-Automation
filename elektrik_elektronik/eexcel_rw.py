@@ -1,29 +1,21 @@
 from elektrik_elektronik.estudent import EStudent
 from models.excel import *
 
-Lessons = [
-    dict(Credit=2, LessonName="BİLGİSAYAR DESTEKLİ UYGULAMALAR 1"),
-    dict(Credit=3, LessonName="DİJİTAL ELEKTRONİK 1"),
-    dict(Credit=2, LessonName="ELEKTRİK-ELEKTRONİK TEKNİK RESMİ 1"),
-    dict(Credit=2, LessonName="ELEKTRİK-ELEKTRONİK TEKNİK RESMİ 2"),
-    dict(Credit=9, LessonName="ELEKTRİK-ELEKTRONİK VE ÖLÇME 1 (*)"),
-    dict(Credit=9, LessonName="ELEKTRİK-ELEKTRONİK VE ÖLÇME 2 (*)"),
-    dict(Credit=3, LessonName="ELEKTRİK ELEKTRONİK ESASLARI 1"),
-    dict(Credit=3, LessonName="ELEKTRİK ELEKTRONİK ESASLARI 2"),
-    dict(Credit=6, LessonName="ELEKTRİK MAKİNELERİ VE KONTROL SİSTEMLERİ 1 (*)"),
-    dict(Credit=0, LessonName="ENDÜSTRİYEL ELEKTRİK SİSTEMLERİ 1"),
-    dict(Credit=4, LessonName="ENDÜSTRİYEL KONTROL SİSTEMLERİ 1"),
-    dict(Credit=5, LessonName="ENDÜSTRİYEL KONTROL VE ARIZA ANALİZ 1"),
-    dict(Credit=2, LessonName="MESLEKİ GELİŞİM 1"),
-    dict(Credit=2, LessonName="MESLEKİ GELİŞİM 2"),
-    dict(Credit=2, LessonName="MİKROKONTROL DEVRELERİ 1"),
-    dict(Credit=9, LessonName="TEMEL ELEKTRİK-ELEKTRONİK ATÖLYESİ 1 (*)")]
-
 
 def write_header(sheet: xlsxwriter.workbook.Worksheet):
-    global Lessons
-    frmt = getWorkBook().add_format()
-    frmt.set_rotation(90)
+
+    frmtRotate = getWorkBook().add_format()
+    frmtRotate.set_rotation(90)
+
+    frmt_Bold_Center = getWorkBook().add_format()
+    frmt_Bold_Center.set_bold(True)
+    frmt_Bold_Center.set_align('center')
+
+    frmtAlign_Rotate_Bold = getWorkBook().add_format()
+    frmtAlign_Rotate_Bold.set_rotation(90)
+    frmtAlign_Rotate_Bold.set_bold(True)
+    frmtAlign_Rotate_Bold.set_align('vcenter')
+
     sheet.write(0, 0, "YENİ KAYIT ÖĞRENCİ LİSTESİ")
     sheet.write(1, 0, "ÖĞRENCİ NO")
     sheet.write(1, 1, "T.C. KİMLİK NO")
@@ -35,21 +27,20 @@ def write_header(sheet: xlsxwriter.workbook.Worksheet):
     sheet.set_column(6, 21, 3)
 
     rowndx = 5
-    for l_ndx in Lessons:
+    for lesson in EStudent.Lessons:
         rowndx += 1
-        sheet.write(1, rowndx, l_ndx["LessonName"], frmt)
-
-    frmt = getWorkBook().add_format({'bold': True})
-
-    rowndx = 5
-    for c_ndx in Lessons:
-        rowndx += 1
-        sheet.write(2, rowndx, c_ndx["Credit"], frmt)
+        sheet.write(1, rowndx, lesson["Name"], frmtRotate)
+        sheet.write(2, rowndx, lesson["Credit"], frmt_Bold_Center)
+    sheet.set_column(22, rowndx + 1, 3.8)
+    sheet.write(1, rowndx + 1, "Toplam", frmtAlign_Rotate_Bold)
+    sheet.write(2, rowndx + 1, EStudent.getTotalLessonsCredits(), frmt_Bold_Center)
 
 
 def write_excel(crow: int, sheetname: str):
     sheet = getWorkBook().add_worksheet(sheetname)
-
+    frmt_Bold_Center = getWorkBook().add_format()
+    frmt_Bold_Center.set_align('center')
+    frmt_Bold_Center.set_bold(True)
     write_header(sheet)
     sheet.set_zoom(75)
 
@@ -70,7 +61,8 @@ def write_excel(crow: int, sheetname: str):
         for i in range(len(degrees)):
             lessonName = degrees[i]["LessonName"]
             rowndx = 5
-            for l_ndx in Lessons:
+            for lesson in EStudent.Lessons:
                 rowndx += 1
-                if lessonName == l_ndx["LessonName"]:
+                if lessonName == lesson["Name"]:
                     sheet.write(crow, rowndx, degrees[i]["Score"])
+        sheet.write(crow, 22, student.getTotalStudentCredits(), frmt_Bold_Center)

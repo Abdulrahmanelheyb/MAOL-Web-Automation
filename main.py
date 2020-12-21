@@ -1,5 +1,5 @@
 from bilisim.exec_bilisim import *
-# from makina.exec_makina import *
+from makina.exec_makina import *
 from elektrik_elektronik.exec_elektrik_elektronik import *
 from models.web_io import *
 from models.excel import *
@@ -20,7 +20,8 @@ e_begin(workBookWritePath)
 w_begin()
 
 b_execute(excelFilePath)
-# e_execute(excelFilePath)
+e_execute(excelFilePath)
+m_execute(excelFilePath)
 
 w_end()
 e_end()

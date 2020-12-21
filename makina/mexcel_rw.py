@@ -2,9 +2,19 @@ from makina.mstudent import MStudent
 from models.excel import *
 
 
-def write_header(sheet: xlsxwriter.workbook.Worksheet):
-    frmt = getWorkBook().add_format()
-    frmt.set_rotation(90)
+def write_header(sheet: xlsxwriter.workbook.Worksheet) -> int:
+    frmtRotate = getWorkBook().add_format()
+    frmtRotate.set_rotation(90)
+
+    frmt_Bold_Center = getWorkBook().add_format()
+    frmt_Bold_Center.set_bold(True)
+    frmt_Bold_Center.set_align('center')
+
+    frmtAlign_Rotate_Bold = getWorkBook().add_format()
+    frmtAlign_Rotate_Bold.set_rotation(90)
+    frmtAlign_Rotate_Bold.set_bold(True)
+    frmtAlign_Rotate_Bold.set_align('vcenter')
+
     sheet.write(0, 0, "YENİ KAYIT ÖĞRENCİ LİSTESİ")
     sheet.write(1, 0, "ÖĞRENCİ NO")
     sheet.write(1, 1, "T.C. KİMLİK NO")
@@ -14,45 +24,24 @@ def write_header(sheet: xlsxwriter.workbook.Worksheet):
     sheet.write(1, 5, "KAYIT TARİHİ")
 
     sheet.set_column(6, 21, 3)
-    sheet.write(1, 6, "", frmt)
-    sheet.write(1, 7, "", frmt)
-    sheet.write(1, 8, "", frmt)
-    sheet.write(1, 9, "", frmt)
-    sheet.write(1, 10, "", frmt)
-    sheet.write(1, 11, "", frmt)
-    sheet.write(1, 12, "", frmt)
-    sheet.write(1, 13, "", frmt)
-    sheet.write(1, 14, "", frmt)
-    sheet.write(1, 15, "", frmt)
-    sheet.write(1, 16, "", frmt)
-    sheet.write(1, 17, "", frmt)
-    sheet.write(1, 18, "", frmt)
-    sheet.write(1, 19, "", frmt)
-    sheet.write(1, 20, "", frmt)
-    sheet.write(1, 21, "", frmt)
+    rowndx = 5
+    for lesson in MStudent.Lessons:
+        rowndx += 1
+        sheet.write(1, rowndx, lesson["Name"], frmtRotate)
+        sheet.write(2, rowndx, lesson["Credit"], frmt_Bold_Center)
 
-    frmt = getWorkBook().add_format({'bold': True})
-    sheet.write(2, 6, 2, frmt)
-    sheet.write(2, 7, 3, frmt)
-    sheet.write(2, 8, 3, frmt)
-    sheet.write(2, 9, 2, frmt)
-    sheet.write(2, 10, 2, frmt)
-    sheet.write(2, 11, 2, frmt)
-    sheet.write(2, 12, 8, frmt)
-    sheet.write(2, 13, 7, frmt)
-    sheet.write(2, 14, 2, frmt)
-    sheet.write(2, 15, 2, frmt)
-    sheet.write(2, 16, 2, frmt)
-    sheet.write(2, 17, 2, frmt)
-    sheet.write(2, 18, 2, frmt)
-    sheet.write(2, 19, 4, frmt)
-    sheet.write(2, 20, 4, frmt)
-    sheet.write(2, 21, 4, frmt)
+    sheet.set_column(22, rowndx + 1, 3.8)
+    sheet.write(1, rowndx + 1, "Toplam", frmtAlign_Rotate_Bold)
+    sheet.write(2, rowndx + 1, MStudent.getTotalLessonsCredits(), frmt_Bold_Center)
+    return rowndx
 
 
 def write_excel(crow: int, sheetname: str):
     sheet = getWorkBook().add_worksheet(sheetname)
-    write_header(sheet)
+    rowlastndx = write_header(sheet)
+    frmt_Bold_Center = getWorkBook().add_format()
+    frmt_Bold_Center.set_align('center')
+    frmt_Bold_Center.set_bold(True)
     sheet.set_zoom(75)
 
     for student in MStudent.Students:
@@ -73,50 +62,9 @@ def write_excel(crow: int, sheetname: str):
 
             lessonName = degrees[i]["LessonName"]
 
-            if lessonName == "":
-                sheet.write(crow, 6, degrees[i]["Score"])
-
-            elif lessonName == "":
-                sheet.write(crow, 7, degrees[i]["Score"])
-
-            elif lessonName == "":
-                sheet.write(crow, 8, degrees[i]["Score"])
-
-            elif lessonName == "":
-                sheet.write(crow, 9, degrees[i]["Score"])
-
-            elif lessonName == "":
-                sheet.write(crow, 10, degrees[i]["Score"])
-
-            elif lessonName == "":
-                sheet.write(crow, 11, degrees[i]["Score"])
-
-            elif lessonName == "":
-                sheet.write(crow, 12, degrees[i]["Score"])
-
-            elif lessonName == "":
-                sheet.write(crow, 13, degrees[i]["Score"])
-
-            elif lessonName == "":
-                sheet.write(crow, 14, degrees[i]["Score"])
-
-            elif lessonName == "":
-                sheet.write(crow, 15, degrees[i]["Score"])
-
-            elif lessonName == "":
-                sheet.write(crow, 16, degrees[i]["Score"])
-
-            elif lessonName == "":
-                sheet.write(crow, 17, degrees[i]["Score"])
-
-            elif lessonName == "":
-                sheet.write(crow, 18, degrees[i]["Score"])
-
-            elif lessonName == "":
-                sheet.write(crow, 19, degrees[i]["Score"])
-
-            elif lessonName == "":
-                sheet.write(crow, 20, degrees[i]["Score"])
-
-            elif lessonName == "":
-                sheet.write(crow, 21, degrees[i]["Score"])
+            rowndx = 5
+            for lesson in MStudent.Lessons:
+                rowndx += 1
+                if lessonName == lesson["Name"]:
+                    sheet.write(crow, rowndx, degrees[i]["Score"])
+        sheet.write(crow, rowlastndx + 1, student.getTotalStudentCredits(), frmt_Bold_Center)
