@@ -96,10 +96,7 @@ Data = [
     dict(Students=MakinaStudents, Lessons=MLessons, SheetName="Makina", TotalLCredits=142)
     ]
 # endregion
-"""
-    dict(Students=BilisimStudents, Lessons=BLessons, SheetName="Bilisim", TotalLCredits=51)
-    dict(Students=MakinaStudents, Lessons=MLessons, SheetName="Makina", TotalLCredits=142)
-"""
+
 # region > Write To Excel
 ExcelRW.write_excel(workBookWritePath, Data)
 # endregion

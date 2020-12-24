@@ -1,6 +1,8 @@
 class Student:
 
     def __init__(self):
+
+        # region > Initialize Attribute
         self.ID: int = None
         self.firstName: str = None
         self.lastName: str = None
@@ -9,6 +11,7 @@ class Student:
         self.register_date: str = None
         self.branch: str = None
         self.degrees: list = []
+        # endregion
 
     # region Get Methods
 
@@ -75,16 +78,30 @@ class Student:
 
 
 def calculateDegrees(student: Student, Lessons):
+    """
+    The Method calculate student degrees.
+
+    :param student: Student Instance
+    :param Lessons: Lessons List
+    :return: No return set directly on student instance
+    """
+    # Check Student degrees var in not None.
     if student.degrees is not None:
+
+        # region > Loop on Dictionaries in Degrees
         for degree in student.degrees:
-            if degree["Score"] != "-":
-                if float(degree["Score"]) >= 45.00:
-                    for lesson in Lessons:
-                        if degree["LessonName"] == lesson["Name"]:
-                            degree["Score"] = lesson["Credit"]
-                            break
-                else:
-                    for lesson in Lessons:
-                        if degree["LessonName"] == lesson["Name"]:
-                            degree["Score"] = 0
-                            break
+
+            # Check degrees is greater than or equal to 45.00
+            if float(degree["Score"]) >= 45.00:
+                for lesson in Lessons:
+                    if degree["LessonName"] == lesson["Name"]:
+                        degree["Score"] = lesson["Credit"]
+                        break
+
+            # if else condition Set 0
+            else:
+                for lesson in Lessons:
+                    if degree["LessonName"] == lesson["Name"]:
+                        degree["Score"] = 0
+                        break
+        # endregion

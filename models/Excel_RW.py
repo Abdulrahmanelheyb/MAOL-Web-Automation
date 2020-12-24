@@ -9,6 +9,13 @@ class ExcelRW:
 
     @staticmethod
     def read_excel(ExcelWorkBookReadPath, SheetNdx: int) -> list:
+        """
+        The Method Read Student Data from excel file
+
+        :param ExcelWorkBookReadPath: Excel File Path
+        :param SheetNdx: Sheet Number Ex. in real 1 = 0 index , in real 2 = 1 index
+        :return: Student List
+        """
 
         # region > Setup
         Students = []
@@ -35,9 +42,9 @@ class ExcelRW:
     def write_excel(ExcelWorkBookWritePath: str, Data: list):
 
         # region > Setup
-
         workbook = xlsxwriter.Workbook(ExcelWorkBookWritePath)
         # endregion
+
         if type(Data) == list:
             for infopack in Data:
 
@@ -114,7 +121,7 @@ class ExcelRW:
                 # region > Last Properties
                 sheet.set_zoom(75)
                 sheet.set_column(0, 1, 14)
-                sheet.set_column(6, ccol, 3)
+                sheet.set_column(6, ccol - 1, 3)
                 sheet.set_column(2, 2, 20)
                 sheet.set_column(3, 4, 30)
                 sheet.set_column(5, 5, 14)
