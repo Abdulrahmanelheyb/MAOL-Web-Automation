@@ -32,8 +32,7 @@ BLessons = [
     dict(Credit=2, Name="OFİS PROGRAMLARI 1"),
     dict(Credit=4, Name="PROGRAMLAMA TEMELLERİ 1"),
     dict(Credit=4, Name="PROGRAMLAMA TEMELLERİ 2"),
-    dict(Credit=4, Name="WEB TASARIMI VE PROGRAMLAMA 1 (*)"),
-]
+    dict(Credit=4, Name="WEB TASARIMI VE PROGRAMLAMA 1 (*)")]
 ELessons = [
     dict(Credit=2, Name="BİLGİSAYAR DESTEKLİ UYGULAMALAR 1"),
     dict(Credit=3, Name="DİJİTAL ELEKTRONİK 1"),
@@ -85,16 +84,22 @@ WebIO.Start(DriverPath)
 
 WebIO.read_web(BilisimStudents)
 WebIO.read_web(ElektronikStudents)
+WebIO.read_web(MakinaStudents)
+
+
 # endregion
 
 # region > Preparing Data
 Data = [
-    dict(Students=BilisimStudents, Lessons=BLessons, SheetName="Bilisim", TotalLCredits=51),
     dict(Students=ElektronikStudents, Lessons=ELessons, SheetName="Elektronik", TotalLCredits=63),
+    dict(Students=BilisimStudents, Lessons=BLessons, SheetName="Bilisim", TotalLCredits=51),
     dict(Students=MakinaStudents, Lessons=MLessons, SheetName="Makina", TotalLCredits=142)
-]
+    ]
 # endregion
-
+"""
+    dict(Students=BilisimStudents, Lessons=BLessons, SheetName="Bilisim", TotalLCredits=51)
+    dict(Students=MakinaStudents, Lessons=MLessons, SheetName="Makina", TotalLCredits=142)
+"""
 # region > Write To Excel
 ExcelRW.write_excel(workBookWritePath, Data)
 # endregion

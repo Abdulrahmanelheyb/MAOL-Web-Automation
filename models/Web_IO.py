@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException, UnexpectedAlertPresentException
+from selenium.webdriver.common.alert import Alert
+from selenium.common.exceptions import NoSuchElementException, NoAlertPresentException
 import time
 
 
@@ -9,7 +10,6 @@ import time
 # from selenium.webdriver.support.expected_conditions import presence_of_element_located
 
 class WebIO:
-
     bwr: webdriver.Edge = None
     webIsBegined = False
 
@@ -45,8 +45,16 @@ class WebIO:
                 listStdData = WebIO.bwr.find_element(By.ID, "IMG1")
                 listStdData.click()
 
-                selectStd = WebIO.bwr.find_element(By.XPATH, "//*[@id='grdAramaSonuclar']/tbody/tr[2]/td[1]/a/img")
-                selectStd.click()
+                # region > Catch Alert here
+                try:
+                    selectStd = WebIO.bwr.find_element(By.XPATH, "//*[@id='grdAramaSonuclar']/tbody/tr[2]/td[1]/a/img")
+                    selectStd.click()
+                    alert = Alert(WebIO.bwr)
+                    alert.accept()
+                    print("Alert Accepted .")
+                except NoAlertPresentException:
+                    pass
+                # endregion
 
                 goto_register_date_menu = WebIO.bwr.find_element(By.XPATH, "//*[@id='cssmenu']/ul/li[2]/ul/li[9]/a")
                 goto_register_date_menu.click()
@@ -76,12 +84,14 @@ class WebIO:
                             value = value.replace(",", ".")
                             return value
                         else:
-                            return "-"
+                            return 0
 
                     Degrees.append(dict(
                         LessonName=getCell(2),
                         Score=getCell(5)
                     ))
+
+                student.setDegrees(Degrees)
 
             except NoSuchElementException:
                 print("STUDENT DEGREES NOT FOUND !")
@@ -89,12 +99,8 @@ class WebIO:
                 print(f'STUDENT TCNO : {student.getTcNo()}')
                 print(f'STUDENT FULLNAME : {student.getFirstName()} {student.getLastName()}')
                 print("==============================")
-            except UnexpectedAlertPresentException as e:
-                print("Alert By Web site Alert Text :")
-                print(e.msg)
-                print("==============================")
-            student.setDegrees(Degrees)
-            time.sleep(3)
+
+            time.sleep(1)
 
     @staticmethod
     def close():

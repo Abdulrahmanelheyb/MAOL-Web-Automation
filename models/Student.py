@@ -8,7 +8,7 @@ class Student:
         self.tcNO: str = None
         self.register_date: str = None
         self.branch: str = None
-        self.degrees: dict = dict()
+        self.degrees: list = []
 
     # region Get Methods
 
@@ -36,11 +36,12 @@ class Student:
     def getDegrees(self):
         return self.degrees
 
-    def getSumCredits(self):
+    def getSumCredits(self) -> int:
         total: int = 0
-        for degree in self.degrees:
-            if degree["Score"] != "-":
+        if self.degrees is not None:
+            for degree in self.degrees:
                 total += int(degree["Score"])
+        return total
 
     # endregion
 
@@ -74,9 +75,16 @@ class Student:
 
 
 def calculateDegrees(student: Student, Lessons):
-    for degree in student.degrees:
-        if degree["Score"] != "-":
-            if float(degree["Score"]) > 44.99:
-                for lesson in Lessons:
-                    if degree["LessonName"] == lesson["Name"]:
-                        degree["Score"] = lesson["Credit"]
+    if student.degrees is not None:
+        for degree in student.degrees:
+            if degree["Score"] != "-":
+                if float(degree["Score"]) >= 45.00:
+                    for lesson in Lessons:
+                        if degree["LessonName"] == lesson["Name"]:
+                            degree["Score"] = lesson["Credit"]
+                            break
+                else:
+                    for lesson in Lessons:
+                        if degree["LessonName"] == lesson["Name"]:
+                            degree["Score"] = 0
+                            break
