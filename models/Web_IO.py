@@ -1,3 +1,14 @@
+"""
+**Developed By Abdulrahman Elheyb. All right is reserved.** \n
+----------------------- \n
+**Contact** :
+    - Mail      :   abdulrahmanelheyb@outlook.com \n
+    - Github    :   https://github.com/Abdulrahmanelheyb \n
+    - Instagram :   https://www.instagram.com/abdulrahmanaese/ \n
+    - Linkedin  :   https://www.linkedin.com/in/abdulrahman-elheyb-75b76917a/
+"""
+
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.alert import Alert
