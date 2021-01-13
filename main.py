@@ -14,8 +14,9 @@ from models.Excel_RW import *
 import os
 
 # region Globals
-excelFilePath = "C:\\Users\\abdul\\Desktop\\2020-2021-yeni-kayıt-listesi-yeni2.xlsx"
-workBookWritePath = "C:\\Users\\abdul\\Desktop\\Students-Data.xlsx"
+excelFilePath = "D:\\MyProjects\\Software_Engineer\\Scripts\\MaolWebAutomation\\data\\2020-2021-yeni-kayıt-listesi" \
+                "-yeni2.xlsx "
+workBookWritePath = "D:\\MyProjects\\Software_Engineer\\Scripts\\MaolWebAutomation\\data\\Students-Data.xlsx"
 DriverPath = "C:\\WebDrivers\\msedgedriver.exe"
 # endregion
 
