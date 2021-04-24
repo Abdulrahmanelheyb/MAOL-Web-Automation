@@ -1,5 +1,6 @@
 # MAOL-Web-Automation
 ### this project created for a get maol students degrees by automation.
+### NOTE : use pip install xlrd==1.2.0
 
 - ***Algorithms***
     - Read students info from Excel file
